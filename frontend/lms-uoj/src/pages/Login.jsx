@@ -11,16 +11,38 @@ function Login() {
   const navigate = useNavigate();
   const [openSignup, setOpenSignup] = useState(false);
 
-
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     regNo: ""
   });
 
+  
+  const handleSignupChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+   const handleSignup = () => {
+        console.log(formData);
+        alert("Signup Request Sent");
+
+        setOpenSignup(false);
+    };
+
+    const setForgotPassword = () => {
+        alert("Password reset link sent to your email");
+    };
+
+    const handleForgotPassword = () => {
+        setForgotPassword();
+    };
+
+
   const handleChange = (e) => {
-    setFormData,setOpenSignup({
+    setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
@@ -46,12 +68,6 @@ function Login() {
 
   };
 
-    const handleSignup = () => {
-        console.log(signupData);
-        alert("Signup Request Sent");
-
-        setOpenSignup(false);
-    };
 
   return (
   <Box sx={{display: "flex"}}>
@@ -124,19 +140,23 @@ function Login() {
           Login
         </Button>
 
-        <Typography sx={{ mt: 2, fontSize: 14 }}>
+        <span
+            onClick={() => handleForgotPassword()}
+            style={{ color: "#3b82f6", cursor: "pointer" }}
+        >
           Forgot Password?
-        </Typography>
+        </span>
 
         <Typography sx={{ mt: 1, fontSize: 14 }}>
           Don't have an account? 
           
          <span
-            onClick={() => setFormData({ ...formData, isSignup: true })}
+            onClick={() => setOpenSignup(true)}
             style={{ color: "#3b82f6", cursor: "pointer", marginLeft: 5 }}
         >
           Sign Up
         </span>
+
         </Typography>
 
       </Card>
@@ -153,7 +173,7 @@ function Login() {
               name="name"
               fullWidth
               margin="normal"
-              onChange={handleChange}
+              onChange={handleSignupChange}
             />
 
             <TextField
@@ -161,7 +181,7 @@ function Login() {
               name="regNo"
               fullWidth
               margin="normal"
-              onChange={handleChange}
+              onChange={handleSignupChange}
             />
 
             <TextField
@@ -169,7 +189,7 @@ function Login() {
               name="email"
               fullWidth
               margin="normal"
-              onChange={handleChange}
+              onChange={handleSignupChange}
             />
 
           </DialogContent>
