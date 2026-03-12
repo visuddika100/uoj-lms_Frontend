@@ -1,14 +1,36 @@
-import { Box, Card, CardContent, Typography, Grid } from "@mui/material";
-import Sidebar from "../components/Sidebar";
+import { Box, Card, CardContent, Typography, Grid, Avatar, IconButton } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import DashboardLayout from "../Layout/DashboardLayout";
 
 function Dashboard() {
+
+  const student = {
+    name: "Alexander",
+    email: "alexander@gmail.com"
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <DashboardLayout />
 
       <Box sx={{ flexGrow: 1, p: 4 }}>
-        <Typography variant="h4">Student Dashboard</Typography>
 
+        {/* Top Header */}
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography variant="h4">Student Dashboard</Typography>
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography>{student.name}</Typography>
+
+            <IconButton>
+              <Avatar>
+                <AccountCircleIcon />
+              </Avatar>
+            </IconButton>
+          </Box>
+        </Box>
+
+        {/* Cards */}
         <Grid container spacing={3} mt={2}>
           <Grid item xs={12} md={4}>
             <Card>
@@ -37,6 +59,7 @@ function Dashboard() {
             </Card>
           </Grid>
         </Grid>
+
       </Box>
     </Box>
   );
