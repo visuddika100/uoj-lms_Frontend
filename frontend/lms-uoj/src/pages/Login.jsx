@@ -1,10 +1,9 @@
-import { Box, Card, Typography, TextField, Button, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, Card, Typography, TextField, Button, Checkbox, FormControlLabel, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import SchoolIcon from "@mui/icons-material/School";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
-import AuthLayout from "../Layout/authLayout";
+import { signupUser } from "../services/authService";
 
 function Login() {
 
@@ -14,10 +13,11 @@ function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    regNo: ""
+    regNo: "",
+    name: ""
   });
 
-  
+  // Signup form change
   const handleSignupChange = (e) => {
     setFormData({
       ...formData,
@@ -25,22 +25,28 @@ function Login() {
     });
   };
 
-   const handleSignup = () => {
-        console.log(formData);
-        alert("Signup Request Sent");
+  const handleSignup = async () => {
+  try {
+    const res = await signupUser({
+      name: formData.name,
+      regNo: formData.regNo,
+      email: formData.email,
+      password: formData.password
+    });
 
-        setOpenSignup(false);
-    };
+    alert("Signup Successful");
+    setOpenSignup(false);
 
-    const setForgotPassword = () => {
-        alert("Password reset link sent to your email");
-    };
+  } catch (error) {
+    console.error(error);
+    alert("Signup failed. Please try again.");
+  }
+};
+  const handleForgotPassword = () => {
+    alert("Password reset link sent to your email");
+  };
 
-    const handleForgotPassword = () => {
-        setForgotPassword();
-    };
-
-
+  // Login form change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -48,11 +54,14 @@ function Login() {
     });
   };
 
+  // LOGIN FUNCTION (FIXED)
   const handleLogin = async () => {
-
     try {
 
-      const res = await loginUser(formData);
+      const res = await loginUser({
+        email: formData.email,
+        password: formData.password
+      });
 
       localStorage.setItem("token", res.data.token);
 
@@ -65,13 +74,10 @@ function Login() {
       alert("Invalid Email or Password");
 
     }
-
   };
 
-
   return (
-  <Box sx={{display: "flex"}}>
-      <AuthLayout />
+
     <Box
       sx={{
         height: "100vh",
@@ -81,7 +87,6 @@ function Login() {
         alignItems: "center"
       }}
     >
-    
 
       <Card
         sx={{
@@ -111,6 +116,7 @@ function Login() {
           name="email"
           fullWidth
           margin="normal"
+          value={formData.email}
           onChange={handleChange}
         />
 
@@ -120,6 +126,7 @@ function Login() {
           type="password"
           fullWidth
           margin="normal"
+          value={formData.password}
           onChange={handleChange}
         />
 
@@ -141,74 +148,87 @@ function Login() {
         </Button>
 
         <span
-            onClick={() => handleForgotPassword()}
-            style={{ color: "#3b82f6", cursor: "pointer" }}
+          onClick={handleForgotPassword}
+          style={{ color: "#3b82f6", cursor: "pointer", display: "block", marginTop: 10 }}
         >
           Forgot Password?
         </span>
 
         <Typography sx={{ mt: 1, fontSize: 14 }}>
-          Don't have an account? 
-          
-         <span
+          Don't have an account?
+
+          <span
             onClick={() => setOpenSignup(true)}
             style={{ color: "#3b82f6", cursor: "pointer", marginLeft: 5 }}
-        >
-          Sign Up
-        </span>
+          >
+            Sign Up
+          </span>
 
         </Typography>
 
       </Card>
 
-    </Box>
+      {/* SIGNUP DIALOG */}
+
       <Dialog open={openSignup} onClose={() => setOpenSignup(false)}>
 
         <DialogTitle>Student Sign Up</DialogTitle>
 
-          <DialogContent>
+        <DialogContent>
 
-            <TextField
-              label="Full Name"
-              name="name"
-              fullWidth
-              margin="normal"
-              onChange={handleSignupChange}
-            />
+          <TextField
+            label="Full Name"
+            name="name"
+            fullWidth
+            margin="normal"
+            onChange={handleSignupChange}
+          />
 
-            <TextField
-              label="Registration Number"
-              name="regNo"
-              fullWidth
-              margin="normal"
-              onChange={handleSignupChange}
-            />
+          <TextField
+            label="Registration Number"
+            name="regNo"
+            fullWidth
+            margin="normal"
+            onChange={handleSignupChange}
+          />
 
-            <TextField
-              label="Email"
-              name="email"
-              fullWidth
-              margin="normal"
-              onChange={handleSignupChange}
-            />
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            fullWidth
+            margin="normal"
+            onChange={handleSignupChange}
+          />
 
-          </DialogContent>
+          <TextField
+            label="Email"
+            name="email"
+            fullWidth
+            margin="normal"
+            onChange={handleSignupChange}
+          />
 
-          <DialogActions>
-            <Button onClick={() => setOpenSignup(false)}>
-              Cancel
-            </Button>
+        </DialogContent>
 
-            <Button
-              variant="contained"
-              onClick={handleSignup}
-            >
-              Submit
-            </Button>
-          </DialogActions>
+        <DialogActions>
+
+          <Button onClick={() => setOpenSignup(false)}>
+            Cancel
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={handleSignup}
+          >
+            Submit
+          </Button>
+
+        </DialogActions>
 
       </Dialog>
-  </Box>
+
+    </Box>
 
   );
 }
