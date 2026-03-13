@@ -15,8 +15,8 @@ function HeaderBar() {
     <AppBar position="static" color="inherit" elevation={1}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
 
-        <Typography variant="h6">
-          Student Dashboard
+        <Typography variant="h6" color="primary">
+          University of Jaffna
         </Typography>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
